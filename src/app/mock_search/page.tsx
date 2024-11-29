@@ -1,20 +1,27 @@
 import fs from 'fs';
 import path from 'path';
 import search_results from "@/app/data/trump-picks-vince-halley.json";
+import { Card, CardContent, Typography } from '@mui/material';
+import ReactMarkdown from 'react-markdown';
+
+import { format_search_results_using_XML_tags, retrieveRAGresponse } from '@/utils';
 
 
-export default function SearchWithMockData() {
+export default async function SearchWithMockData() {
+
+    const formatted_results = format_search_results_using_XML_tags(search_results);
+    console.log(`results: ${formatted_results}`)
+    const rag_response = await retrieveRAGresponse(formatted_results);
     return (
         <div>
-            {search_results.map(article => {
-                return <div>
-                    <h3> {article["title"]}</h3>
-                    <h6>Affiliation: {article["political_affiliation"]}</h6>
-                    <p>
-                        {article["body"]}
-                    </p>
-                </div>
-            })}
+            <h3>Question: Study the differences and similarities between the democrat & republican opinions.Give an overview of discrepancies between these views and misrepresented facts: </h3>
+        
+            <Card>
+                <CardContent>
+                    <ReactMarkdown>{rag_response}</ReactMarkdown>
+                </CardContent>
+            </Card>
+
         </div>
     );
 }
