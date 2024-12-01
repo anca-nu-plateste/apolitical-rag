@@ -3,7 +3,7 @@
 const tokenizer = require('gpt-tokenizer');
 import Exa from 'exa-js';
 import OpenAI from "openai";
-import { SearchAndEval } from './experiments/types';
+import { Article, Search, SearchAndEval } from './experiments/types';
 
 console.log(process.env.OPENAI_API_KEY)
 const openai = new OpenAI();
@@ -64,42 +64,16 @@ function format_search_results_as_RAG_context(results): string {
     return output
 }
 
-async function retrieveRAGresponse(search_results: string, rag_prompts: Array<Record<string, any>>): Promise<string> {
-    // TODO: Write docstring
 
-    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query.";
-    const guiding_prompt = "Describe the differences and similarities between the articles with republican vs democrat affiliation  based on the content, tone, focus areas, and other journalistic elements.";
-    
-
-    // const messages = [
-    //   { role: "system", content: SYSTEM_MESSAGE },
-    //   { role: "user", content: guiding_prompt },
-    //   { role: "system", content: `Here's a list of articles to research: \n ${input}` },
-    // ];
-  
-    // populate the data within the rag_prompts wth input
-    const updatedPrompts = rag_prompts.map((prompt: Record<string, string>) => {
-        if (prompt.content.includes("{{search_results}}")) {
-          return {
-            ...prompt,
-            // TODO: replace with constant
-            content: prompt.content.replace("{{search_results}}", search_results),
-          };
-        }
-        return prompt;
-      });
-
-    log_tokens(updatedPrompts);
-
-  
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo",
-      messages: updatedPrompts,
-    });
-  
-    const messageContent = completion.choices[0]?.message?.content || "";
-    return messageContent;
-  }
+/**
+ * Performs a RAG (Retrieval-Augmented Generation) search using the given query.
+ * 
+ * This function searches for articles with democrat and republican affiliations,
+ * formats the search results, and generates a response using OpenAI's GPT-4 model.
+ * 
+ * @param {string} query - The search query.
+ * @returns {Promise<string>} - The generated response from GPT-4.
+ */
 async function RAGSearchResults(query: string) {
     const blue_search = await exa_search(query + "I am a democrat", 10);
     const blue_content = format_search_results_as_RAG_context(blue_search.results);
@@ -131,15 +105,17 @@ async function RAGSearchResults(query: string) {
 }
 
 
-function format_search_results_using_XML_tags(results:SearchAndEval): string {
+
+
+// TODO: Transform to Mock Search class and rename this function to 
+function format_search_results_using_XML_tags(articles:Article[]): string {
     /**
-     * Take in a result object from  the exa search and format it into a LLM ready text
+     * Take in a list of articles and format it into a LLM ready text
      */
     let output = "<articles>\n";
     let tab_spaces = "  "
     
-    for (const article of results.articles) {
-        console.log(article)
+    for (const article of articles) {
         output += tab_spaces + "<article>\n"
 
         tab_spaces += "  " // increase indentation
@@ -151,10 +127,50 @@ function format_search_results_using_XML_tags(results:SearchAndEval): string {
         output += tab_spaces + "</article> \n\n"
     }
     output += "</articles>\n";
-    // console.log(`LLM results: ${output}`)
+    // console.log(output)
     return output
 }
 
 
+/**
+ * Generates a response using OpenAI's GPT-4 model based on the provided search results and RAG prompts.
+ * 
+ * This function takes the search results and RAG prompts, formats them, and generates a response using OpenAI's GPT-4 model.
+ * 
+ * @param {string} search_results - The search results to be included in the prompt.
+ * @param {Array<Record<string, any>>} rag_prompts - An array of RAG prompts to guide the response generation.
+ * @returns {Promise<string>} - The generated response from GPT-4.
+ */
+async function retrieveRAGresponse(search_results: string, rag_prompts: Array<Record<string, any>>): Promise<string> {
+    // TODO: Write docstring
+
+    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query.";
+    const guiding_prompt = "Describe the differences and similarities between the articles with republican vs democrat affiliation  based on the content, tone, focus areas, and other journalistic elements.";
+    
+    // populate the data within the rag_prompts wth input
+    const updatedPrompts = rag_prompts.map((prompt: Record<string, string>) => {
+        if (prompt.content.includes("{{search_results}}")) {
+          return {
+            ...prompt,
+            // TODO: replace with constant
+            content: prompt.content.replace("{{search_results}}", search_results),
+          };
+        }
+        return prompt;
+      });
+
+    log_tokens(updatedPrompts);
+
+  
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4-turbo",
+      messages: updatedPrompts,
+    });
+  
+    const messageContent = completion.choices[0]?.message?.content || "";
+    console.log(completion.choices[0])
+ 
+    return messageContent;
+  }
 
 export { log_tokens, RAGSearchResults, format_search_results_using_XML_tags, retrieveRAGresponse };

@@ -14,6 +14,7 @@ export interface Article {
    * @property {string} [gpt4Response] - optional GPT-4 response.
    */
 
+
   export interface SearchAndEval {
     articles: Article[];
     gpt4Response?: string;
