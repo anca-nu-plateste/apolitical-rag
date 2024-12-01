@@ -3,6 +3,7 @@
 const tokenizer = require('gpt-tokenizer');
 import Exa from 'exa-js';
 import OpenAI from "openai";
+import { SearchAndEval } from './experiments/types';
 
 console.log(process.env.OPENAI_API_KEY)
 const openai = new OpenAI();
@@ -63,26 +64,42 @@ function format_search_results_as_RAG_context(results): string {
     return output
 }
 
-async function retrieveRAGresponse(input: str) {
-    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query."
-    let guiding_prompt = "Describe the differences and similarities between the articles with republican vs democrat affiliation.";
-    const messages = [
-        { "role": "user", "content": guiding_prompt },
-        { "role": "system", "content": `Here's a list of articles to research: \n ${input}`},
+async function retrieveRAGresponse(search_results: string, rag_prompts: Array<Record<string, any>>): Promise<string> {
+    // TODO: Write docstring
 
-    ]
-    log_tokens(messages)
+    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query.";
+    const guiding_prompt = "Describe the differences and similarities between the articles with republican vs democrat affiliation  based on the content, tone, focus areas, and other journalistic elements.";
+    
+
+    // const messages = [
+    //   { role: "system", content: SYSTEM_MESSAGE },
+    //   { role: "user", content: guiding_prompt },
+    //   { role: "system", content: `Here's a list of articles to research: \n ${input}` },
+    // ];
+  
+    // populate the data within the rag_prompts wth input
+    const updatedPrompts = rag_prompts.map((prompt: Record<string, string>) => {
+        if (prompt.content.includes("{{search_results}}")) {
+          return {
+            ...prompt,
+            // TODO: replace with constant
+            content: prompt.content.replace("{{search_results}}", search_results),
+          };
+        }
+        return prompt;
+      });
+
+    log_tokens(updatedPrompts);
+
+  
     const completion = await openai.chat.completions.create({
-        model: "gpt-4-turbo",
-        messages: [
-            { "role": "system", "content": `Here's a list of articles to research: \n ${input}`},
-            { "role": "user", "content": guiding_prompt },
-        ],
+      model: "gpt-4-turbo",
+      messages: updatedPrompts,
     });
-    console.log(completion)
-    console.log(completion.choices[0])
-    return completion.choices[0].message.content
-}
+  
+    const messageContent = completion.choices[0]?.message?.content || "";
+    return messageContent;
+  }
 async function RAGSearchResults(query: string) {
     const blue_search = await exa_search(query + "I am a democrat", 10);
     const blue_content = format_search_results_as_RAG_context(blue_search.results);
@@ -114,31 +131,30 @@ async function RAGSearchResults(query: string) {
 }
 
 
-function format_search_results_using_XML_tags(results): string {
+function format_search_results_using_XML_tags(results:SearchAndEval): string {
     /**
      * Take in a result object from  the exa search and format it into a LLM ready text
      */
     let output = "<articles>\n";
     let tab_spaces = "  "
-
-    console.log(results)
-    for (const content of results.map(res => ({ "title": res["title"], "body": res["body"], "affiliation": res["political_affiliation"] }))) {
-        console.log(content)
-        output += tab_spaces + "<article> \n"
+    
+    for (const article of results.articles) {
+        console.log(article)
+        output += tab_spaces + "<article>\n"
 
         tab_spaces += "  " // increase indentation
-        output += tab_spaces + "<title> " + content["title"] + "</title> \n"
-        output += tab_spaces + "<political_affiliation> " + content["affiliation"] + "</political_affiliation> \n"
-        output += tab_spaces + "<body> " + content["body"] + " </body>\n"
+        output += tab_spaces + "<title> " + article.title + "</title> \n"
+        output += tab_spaces + "<political_affiliation> " + article.political_affiliation+ "</political_affiliation> \n"
+        output += tab_spaces + "<body> " + article.body + " </body>\n"
         tab_spaces = tab_spaces.slice(0, -2) // decrease indentation
 
         output += tab_spaces + "</article> \n\n"
     }
     output += "</articles>\n";
-
     // console.log(`LLM results: ${output}`)
-
     return output
 }
+
+
 
 export { log_tokens, RAGSearchResults, format_search_results_using_XML_tags, retrieveRAGresponse };
