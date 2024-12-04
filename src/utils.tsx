@@ -68,19 +68,31 @@ function format_search_results_as_RAG_context(results): string {
 /**
  * Performs a RAG (Retrieval-Augmented Generation) search using the given query.
  * 
- * This function searches for articles with democrat and republican affiliations,
- * formats the search results, and generates a response using OpenAI's GPT-4 model.
+ * This function performs two separate searches:
+ * 1. A "blue" search that appends "I am a democrat" to the query
+ * 2. A "red" search that appends "I am a republican" to the query
+ * 
+ * The results are formatted and passed to GPT-4 to generate a comparative analysis
+ * that highlights democratic and republican perspectives.
  * 
  * @param {string} query - The search query.
- * @returns {Promise<string>} - The generated response from GPT-4.
+ * @returns {Promise<[string, Search, Search]>} - A tuple containing:
+ *   - The generated response from GPT-4
+ *   - The blue (democratic) search results
+ *   - The red (republican) search results
  */
-async function RAGSearchResults(query: string) {
+async function searchResults(query: string) {
     const blue_search = await exa_search(query + "I am a democrat", 10);
-    const blue_content = format_search_results_as_RAG_context(blue_search.results);
     const red_search = await exa_search(query + "I am a republican", 10);
-    const red_content = format_search_results_as_RAG_context(red_search.results);
-    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query."
+    return [blue_search, red_search]
+}
 
+async function RAGResponse(query:string, blue_search, red_search) {
+    const blue_content = format_search_results_as_RAG_context(blue_search.results);
+    const red_content = format_search_results_as_RAG_context(red_search.results);
+    
+    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query."
+    
     let guiding_prompt = "Study  the differences and similarities between the democrat & republican opinions. Use these leanings to give a bias overview when answering the user's question and please cite your sources.";
     const messages = [
         { "role": "system", "content": SYSTEM_MESSAGE },
@@ -142,7 +154,6 @@ function format_search_results_using_XML_tags(articles:Article[]): string {
  * @returns {Promise<string>} - The generated response from GPT-4.
  */
 async function retrieveRAGresponse(search_results: string, rag_prompts: Array<Record<string, any>>): Promise<string> {
-    // TODO: Write docstring
 
     const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query.";
     const guiding_prompt = "Describe the differences and similarities between the articles with republican vs democrat affiliation  based on the content, tone, focus areas, and other journalistic elements.";
@@ -173,4 +184,4 @@ async function retrieveRAGresponse(search_results: string, rag_prompts: Array<Re
     return messageContent;
   }
 
-export { log_tokens, RAGSearchResults, format_search_results_using_XML_tags, retrieveRAGresponse };
+export { log_tokens, searchResults, RAGResponse, format_search_results_using_XML_tags, retrieveRAGresponse };

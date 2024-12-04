@@ -1,6 +1,5 @@
 import { useState } from "react";
 import styles from '@/app/ui/search_bar/search_bar.module.css'
-import { RAGSearchResults } from "@/utils";
 
 interface SearchBarProps {
     handleSearch: (query: string) => Promise<void>;
