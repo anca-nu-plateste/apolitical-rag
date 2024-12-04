@@ -1,11 +1,10 @@
 'use client';
 
 import { useState } from "react";
-import { Card, CardContent, Typography } from '@mui/material';
 import { RAGSearchResults } from '@/utils'
 import styles from '@/app/ui/index.module.css'
-import ReactMarkdown from 'react-markdown';
 import SearchBar from "./search_bar/search_bar";
+import LLMResponse from "./llm_response/llm_response";
 
 
 export default function Home() {
@@ -22,18 +21,7 @@ export default function Home() {
         <div className={styles.container}>
             <SearchBar
                 handleSearch={handleSearch} />
-            {completion && (
-                <div className={styles.completionContainer}>
-                    <Typography variant="h5" component="div">
-                        RAG Answer:
-                    </Typography>
-                    <Card>
-                        <CardContent>
-                            <ReactMarkdown>{completion}</ReactMarkdown>
-                        </CardContent>
-                    </Card>
-                </div>
-            )}
+            {completion && <LLMResponse response={completion}/>}
         </div>
     );
 }

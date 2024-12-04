@@ -5,10 +5,3 @@
     height: 100vh;
     flex-direction: column;
 }
-
-.completionContainer {
-    margin-top: 40px;
-    /* Add space between the search bar and the completion result */
-    width: 100%;
-    max-width: 600px;
-}
