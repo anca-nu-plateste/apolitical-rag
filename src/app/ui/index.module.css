@@ -6,28 +6,6 @@
     flex-direction: column;
 }
 
-.searchBox {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.input {
-    width: 300px;
-    height: 40px;
-    font-size: 18px;
-    padding: 10px;
-    margin-bottom: 20px;
-}
-
-.button {
-    width: 150px;
-    height: 40px;
-    font-size: 18px;
-    cursor: pointer;
-}
-
-
 .completionContainer {
     margin-top: 40px;
     /* Add space between the search bar and the completion result */
