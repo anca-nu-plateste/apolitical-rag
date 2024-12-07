@@ -1,9 +1,9 @@
 'use server';
 
-const tokenizer = require('gpt-tokenizer');
+import tokenizer from 'gpt-tokenizer';
 import Exa from 'exa-js';
 import OpenAI from "openai";
-import { Article, Search, SearchAndEval } from './experiments/types';
+import { Article } from './experiments/types';
 
 console.log(process.env.OPENAI_API_KEY)
 const openai = new OpenAI();
@@ -87,7 +87,7 @@ async function RAGResponse(query:string, blue_search, red_search) {
     
     const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions."
     
-    let guiding_prompt = "Study  the differences and similarities between the democrat & republican opinions. Summarize leanings into 1-2 bullet points of bias overview. Cite your sources by referencing titles";
+    const guiding_prompt = "Study  the differences and similarities between the democrat & republican opinions. Summarize leanings into 1-2 bullet points of bias overview. Cite your sources by referencing titles";
     const messages = [
         { "role": "system", "content": SYSTEM_MESSAGE },
         { "role": "system", "content": guiding_prompt },
@@ -142,13 +142,11 @@ function format_search_results_using_XML_tags(articles:Article[]): string {
  * Computes an LLM response based on the provided search results and RAG prompts.
  * 
  * @param {string} search_results - The search results to be included in the prompt.
- * @param {Array<Record<string, any>>} rag_prompts - An array of RAG prompts to guide the response generation.
+ * @param {Array<Record<string, string>>} rag_prompts - An array of RAG prompts to guide the response generation.
  * @returns {Promise<string>} - The generated response from GPT-4.
  */
-async function retrieveRAGresponse(search_results: string, rag_prompts: Array<Record<string, any>>): Promise<string> {
+async function retrieveRAGresponse(search_results: string, rag_prompts: Array<Record<string, string>>): Promise<string> {
 
-    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query.";
-    const guiding_prompt = "Describe the differences and similarities between the articles with republican vs democrat affiliation  based on the content, tone, focus areas, and other journalistic elements.";
     
     // populate the data within the rag_prompts wth input
     const updatedPrompts = rag_prompts.map((prompt: Record<string, string>) => {

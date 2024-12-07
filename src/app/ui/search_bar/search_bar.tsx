@@ -12,7 +12,7 @@ export default function SearchBar({ handleSearch }: SearchBarProps) {
     <div className={styles.searchBox}>
         <h3>Apolitical Rag</h3>
         <br></br>
-        <h4>Ask a question about the election and we'll generate a response that captures republican & democratic opinions</h4>
+        <h4>Ask a question about the election and we will generate a response that captures republican & democratic opinions</h4>
         <input
             type="text"
             value={query}

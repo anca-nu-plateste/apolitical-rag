@@ -6,10 +6,9 @@ import styles from '@/app/ui/index.module.css'
 import SearchBar from "./search_bar/search_bar";
 import LLMResponse from "./llm_response/llm_response";
 import SearchResults from "./search_results/search_results";
-import SearchResult from '@/app/utils.tsx'
+import {SearchResult} from '@/app/types'
 
 export default function Home() {
-    const [query, setQuery] = useState("");
     const [completion, setCompletion] = useState("")
     const [results, setResults] = useState<SearchResult[]>([]);
     const [view, setView] = useState("search")
@@ -17,12 +16,13 @@ export default function Home() {
     const handleSearch = async (query: string) => {
         console.log(`Query ${query}`)
         const [blue_search, red_search] = await (searchResults(query));
-        /* TODO: Add republican docs to results */
         const formattedResults = formatSearches(blue_search, red_search)
         setResults(formattedResults)
 
         const message = await RAGResponse(query, blue_search, red_search);
-        message ? setCompletion(message) : console.log("We got an empty response from RAG")
+        if (message) {
+            setCompletion(message)
+        }
         setView("results")
     }
 
@@ -50,7 +50,7 @@ export default function Home() {
  * Formats and combines search results from blue and red searches into a single array.
  */
 function formatSearches(blue_search: { results: SearchResult[] }, red_search: { results: SearchResult[] }): SearchResult[] {
-    let results: SearchResult[] = [];
+    const results: SearchResult[] = [];
     for (const result of blue_search.results) {
         console.log("Result schema", result);
         results.push({ title: result.title, text: result.text, highlights: result.highlights, url: result.url });
