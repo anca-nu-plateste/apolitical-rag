@@ -1,0 +1,15 @@
+.completionContainer {
+    margin-top: 40px;
+    /* Add space between the search bar and the completion result */
+    max-width: 75vw;
+    max-height: 20vh;
+    margin: 50px;
+}
+
+.LLMresponse {
+    max-height: 20vh;
+    overflow-y: 'auto';
+    overflow-x:'auto';
+    border-color : green;
+    border-width: 10px;
+}
