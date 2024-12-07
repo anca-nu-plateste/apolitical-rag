@@ -3,16 +3,19 @@
 import tokenizer from 'gpt-tokenizer';
 import Exa from 'exa-js';
 import OpenAI from "openai";
-import { Article } from './experiments/types';
+// import { Article } from './experiments/types';
+import type { ChatCompletionMessageParam } from "openai/resources/chat/completions";
+import {SearchResult, Search} from '@/app/types'
+
 
 console.log(process.env.OPENAI_API_KEY)
 const openai = new OpenAI();
 const exa = new Exa(process.env.EXA_API_KEY);
 
-function log_tokens(messages) {
+function log_tokens(messages: ChatCompletionMessageParam[]) {
     let totalTokens = 0;
-    messages.forEach((msg) => {
-        const tokens = tokenizer.encode(msg.content);
+    messages.forEach((msg: ChatCompletionMessageParam) => {
+        const tokens = tokenizer.encode(msg.content as string);
         totalTokens += tokens.length;
     });
 
@@ -39,13 +42,17 @@ async function exa_search(query: string = "", numResults: number = 5) {
 
 }
 
-function format_search_results_as_RAG_context(results): string {
+function format_search_results_as_RAG_context(results: SearchResult[]): string {
     /**
      * Take in a result object from  the exa search and format it into a LLM ready text
      */
     let output = "";
     console.log(results)
-    for (const content of results.map(res => ({ "title": res.title, "text": res.text, "highlights": res.hihglights }))) {
+    for (const content of results.map(res => ({ 
+        title: res.title, 
+        text: res.text, 
+        highlights: res.highlights 
+    }))) {
         console.log(content)
         output += "Title:" + content["title"] + "\n"
         if (content["highlights"]) {
@@ -81,19 +88,22 @@ async function searchResults(query: string) {
     return [blue_search, red_search]
 }
 
-async function RAGResponse(query:string, blue_search, red_search) {
+async function RAGResponse(
+    query: string, 
+    blue_search:Search, 
+    red_search: Search
+) {
     const blue_content = format_search_results_as_RAG_context(blue_search.results);
     const red_content = format_search_results_as_RAG_context(red_search.results);
     
     const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions."
     
     const guiding_prompt = "Study  the differences and similarities between the democrat & republican opinions. Summarize leanings into 1-2 bullet points of bias overview. Cite your sources by referencing titles";
-    const messages = [
-        { "role": "system", "content": SYSTEM_MESSAGE },
-        { "role": "system", "content": guiding_prompt },
-        { "role": "user", "content": query },
-        { "role": "system", "content": "Here's a list of articles to research: \n\n Democrat:" + blue_content + "\n\n" + "Republican:" + red_content },
-
+    const messages: ChatCompletionMessageParam[] = [
+        { role: "system", content: SYSTEM_MESSAGE },
+        { role: "system", content: guiding_prompt },
+        { role: "user", content: query },
+        { role: "system", content: "Here's a list of articles to research: \n\n Democrat:" + blue_content + "\n\n" + "Republican:" + red_content },
     ]
     log_tokens(messages)
     const completion = await openai.chat.completions.create({
@@ -113,65 +123,68 @@ async function RAGResponse(query:string, blue_search, red_search) {
 
 
 
-// TODO: Transform to Mock Search class and rename this function  
-function format_search_results_using_XML_tags(articles:Article[]): string {
-    /**
-     * Take in a list of articles and format it into a LLM ready text
-     */
-    let output = "<articles>\n";
-    let tab_spaces = "  "
+// // TODO: Transform to Mock Search class and rename this function  
+// function format_search_results_using_XML_tags(articles:Article[]): string {
+//     /**
+//      * Take in a list of articles and format it into a LLM ready text
+//      */
+//     let output = "<articles>\n";
+//     let tab_spaces = "  "
     
-    for (const article of articles) {
-        output += tab_spaces + "<article>\n"
+//     for (const article of articles) {
+//         output += tab_spaces + "<article>\n"
 
-        tab_spaces += "  " 
-        output += tab_spaces + "<title> " + article.title + "</title> \n"
-        output += tab_spaces + "<political_affiliation> " + article.political_affiliation+ "</political_affiliation> \n"
-        output += tab_spaces + "<body> " + article.body + " </body>\n"
-        tab_spaces = tab_spaces.slice(0, -2) 
+//         tab_spaces += "  " 
+//         output += tab_spaces + "<title> " + article.title + "</title> \n"
+//         output += tab_spaces + "<political_affiliation> " + article.political_affiliation+ "</political_affiliation> \n"
+//         output += tab_spaces + "<body> " + article.body + " </body>\n"
+//         tab_spaces = tab_spaces.slice(0, -2) 
 
-        output += tab_spaces + "</article> \n\n"
-    }
-    output += "</articles>\n";
-    // console.log(output)
-    return output
-}
+//         output += tab_spaces + "</article> \n\n"
+//     }
+//     output += "</articles>\n";
+//     // console.log(output)
+//     return output
+// }
 
 
-/**
- * Computes an LLM response based on the provided search results and RAG prompts.
- * 
- * @param {string} search_results - The search results to be included in the prompt.
- * @param {Array<Record<string, string>>} rag_prompts - An array of RAG prompts to guide the response generation.
- * @returns {Promise<string>} - The generated response from GPT-4.
- */
-async function retrieveRAGresponse(search_results: string, rag_prompts: Array<Record<string, string>>): Promise<string> {
+// /**
+//  * Computes an LLM response based on the provided search results and RAG prompts.
+//  * 
+//  * @param {string} search_results - The search results to be included in the prompt.
+//  * @param {Array<Record<string, string>>} rag_prompts - An array of RAG prompts to guide the response generation.
+//  * @returns {Promise<string>} - The generated response from GPT-4.
+//  */
+// async function retrieveRAGresponse(
+//     search_results: string, 
+//     rag_prompts: ChatCompletionMessageParam[]
+// ): Promise<string> {
 
     
-    // populate the data within the rag_prompts wth input
-    const updatedPrompts = rag_prompts.map((prompt: Record<string, string>) => {
-        if (prompt.content.includes("{{search_results}}")) {
-          return {
-            ...prompt,
-            // TODO: replace with constant
-            content: prompt.content.replace("{{search_results}}", search_results),
-          };
-        }
-        return prompt;
-      });
+//     // populate the data within the rag_prompts wth input
+//     const updatedPrompts = rag_prompts.map((prompt: Record<string, string>) => {
+//         if (prompt.content.includes("{{search_results}}")) {
+//           return {
+//             ...prompt,
+//             // TODO: replace with constant
+//             content: prompt.content.replace("{{search_results}}", search_results),
+//           };
+//         }
+//         return prompt;
+//       });
 
-    log_tokens(updatedPrompts);
+//     log_tokens(updatedPrompts);
 
   
-    const completion = await openai.chat.completions.create({
-      model: "gpt-4-turbo",
-      messages: updatedPrompts,
-    });
+//     const completion = await openai.chat.completions.create({
+//       model: "gpt-4-turbo",
+//       messages: updatedPrompts,
+//     });
   
-    const messageContent = completion.choices[0]?.message?.content || "";
-    console.log(completion.choices[0])
+//     const messageContent = completion.choices[0]?.message?.content || "";
+//     console.log(completion.choices[0])
  
-    return messageContent;
-  }
+//     return messageContent;
+//   }
 
-export { log_tokens, searchResults, RAGResponse, format_search_results_using_XML_tags, retrieveRAGresponse };
+export { log_tokens, searchResults, RAGResponse };

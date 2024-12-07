@@ -6,7 +6,7 @@ import styles from '@/app/ui/index.module.css'
 import SearchBar from "./search_bar/search_bar";
 import LLMResponse from "./llm_response/llm_response";
 import SearchResults from "./search_results/search_results";
-import {SearchResult} from '@/app/types'
+import {SearchResult, Search} from '@/app/types'
 
 export default function Home() {
     const [completion, setCompletion] = useState("")
@@ -15,7 +15,7 @@ export default function Home() {
 
     const handleSearch = async (query: string) => {
         console.log(`Query ${query}`)
-        const [blue_search, red_search] = await (searchResults(query));
+        const [blue_search, red_search] = await searchResults(query);
         const formattedResults = formatSearches(blue_search, red_search)
         setResults(formattedResults)
 
@@ -46,19 +46,37 @@ export default function Home() {
     );
 }
 
-/**
- * Formats and combines search results from blue and red searches into a single array.
- */
-function formatSearches(blue_search: { results: SearchResult[] }, red_search: { results: SearchResult[] }): SearchResult[] {
+
+
+function formatSearches(
+    blue_search: Search,
+    red_search: Search):
+     SearchResult[] {
     const results: SearchResult[] = [];
-    for (const result of blue_search.results) {
-        console.log("Result schema", result);
-        results.push({ title: result.title, text: result.text, highlights: result.highlights, url: result.url });
+    
+    // Handle single response objects
+    if (blue_search.results) {
+        for (const result of blue_search.results) {
+            results.push({
+                title: result.title,
+                text: result.text,
+                url: result.url,
+                highlights: result.highlights ?? []
+            });
+        }
     }
-    for (const result of red_search.results) {
-        console.log("Result schema", result);
-        results.push({ title: result.title, text: result.text, highlights: result.highlights, url: result.url });
+    
+    if (red_search.results) {
+        for (const result of red_search.results) {
+            results.push({
+                title: result.title,
+                text: result.text,
+                url: result.url,
+                highlights: result.highlights ?? []
+            });
+        }
     }
+    
     return results;
 }
 

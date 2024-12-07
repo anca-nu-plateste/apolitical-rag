@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import styles from './search_results.module.css';
+import {SearchResult} from '@/app/types';
 
-export default function SearchResults({ results, handleSearch}) {
+export default function SearchResults({ results, handleSearch }: { results: SearchResult[], handleSearch: () => void }) {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const handlePrev = () => {

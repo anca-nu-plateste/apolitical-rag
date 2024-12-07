@@ -1,4 +1,0 @@
-[
-    { "role": "user", "content": "Describe the differences and similarities between the articles with republican vs democrat affiliation." },
-    { "role": "system", "content": "Here's a list of articles to research: \n {{search_results}}"}
-]
