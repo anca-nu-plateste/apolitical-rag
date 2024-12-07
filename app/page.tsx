@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { searchResults, RAGResponse } from '../utils'
-import styles from './ui/index.module.css'
+import styles from './index.module.css'
 import SearchBar from "./search_bar/search_bar";
 import LLMResponse from "./llm_response/llm_response";
 import SearchResults from "./search_results/search_results";
