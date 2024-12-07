@@ -39,7 +39,7 @@ export default function Home() {
                     <div>
                         <p> -------------</p>
                     </div>
-                    {results && <SearchResults results={results} handleSearch={handleBack} />}
+                    {results != null && <SearchResults results={results} handleSearch={handleBack} />}
                 </>
             }    
         </div>
