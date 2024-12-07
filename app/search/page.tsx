@@ -1,6 +1,5 @@
-"use client";
 
-import Home from '@/app/page';
+import Home from '../page';
 
 export default function SearchPage() {
     return <Home/> 
