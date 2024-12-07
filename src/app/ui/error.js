@@ -1,11 +1,11 @@
-"use client";
+// "use client";
 
-import ErrorPage from "./_error/error";
-const ErrorPage = ({error}) => {
-    return (
-        <p> Hello. This is an error unfortunately {error}</p>
-    )
-}
+// import ErrorPage from "./_error/error";
+// const ErrorPage = ({error}) => {
+//     return (
+//         <p> Hello. This is an error unfortunately {error}</p>
+//     )
+// }
 
 
-export default ErrorPage
+// export default ErrorPage
