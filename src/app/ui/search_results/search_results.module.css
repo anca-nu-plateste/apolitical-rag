@@ -3,8 +3,6 @@
     background: linear-gradient(0.25turn, white, rgb(175, 249, 246, 0.1), white);
     max-width: 90vw;
     height: 50vh;
-    overflow-y: auto;
-    overflow-x: auto;
     margin-bottom: 10vh;
     position: relative;
     top: 0;
@@ -13,9 +11,16 @@
 .arrow_keys {
     display: flex;
     flex-direction: row;
+    justify-content: center;
 }
 
 .arrow {
     width:50px;
     height:25px;
+}
+
+.text {
+    overflow-y: auto;
+    overflow-x: auto;
+    height: 50vh;
 }

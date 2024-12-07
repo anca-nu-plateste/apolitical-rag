@@ -85,9 +85,9 @@ async function RAGResponse(query:string, blue_search, red_search) {
     const blue_content = format_search_results_as_RAG_context(blue_search.results);
     const red_content = format_search_results_as_RAG_context(red_search.results);
     
-    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions. Only generate one search query."
+    const SYSTEM_MESSAGE = "You are a helpful assistant that generates search queries based on user questions."
     
-    let guiding_prompt = "Study  the differences and similarities between the democrat & republican opinions. Use these leanings to give a bias overview when answering the user's question and please cite your sources.";
+    let guiding_prompt = "Study  the differences and similarities between the democrat & republican opinions. Summarize leanings into 1-2 bullet points of bias overview. Cite your sources by referencing titles";
     const messages = [
         { "role": "system", "content": SYSTEM_MESSAGE },
         { "role": "system", "content": guiding_prompt },

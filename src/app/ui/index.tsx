@@ -39,8 +39,7 @@ export default function Home() {
                     <div>
                         <p> -------------</p>
                     </div>
-                    {results && <SearchResults results={results}/>}
-                    <button onClick={handleBack}>Make another search</button>
+                    {results && <SearchResults results={results} handleSearch={handleBack} />}
                 </>
             }    
         </div>

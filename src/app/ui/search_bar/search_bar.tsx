@@ -1,3 +1,4 @@
+"use client";
 import { useState } from "react";
 import styles from '@/app/ui/search_bar/search_bar.module.css'
 
