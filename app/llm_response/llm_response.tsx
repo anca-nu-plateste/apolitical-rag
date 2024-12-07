@@ -2,7 +2,7 @@ import { Card, CardContent, Typography } from '@mui/material';
 import ReactMarkdown from 'react-markdown';
 
 
-import styles from '@/app/ui/llm_response/llm_response.module.css'
+import styles from './llm_response.module.css'
 
 
 interface LLMResponseProps {
