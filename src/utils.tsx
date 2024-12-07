@@ -66,14 +66,8 @@ function format_search_results_as_RAG_context(results): string {
 
 
 /**
- * Performs a RAG (Retrieval-Augmented Generation) search using the given query.
  * 
- * This function performs two separate searches:
- * 1. A "blue" search that appends "I am a democrat" to the query
- * 2. A "red" search that appends "I am a republican" to the query
- * 
- * The results are formatted and passed to GPT-4 to generate a comparative analysis
- * that highlights democratic and republican perspectives.
+ * Performs 2 searches: from republican and democrat perspectives
  * 
  * @param {string} query - The search query.
  * @returns {Promise<[string, Search, Search]>} - A tuple containing:
@@ -119,7 +113,7 @@ async function RAGResponse(query:string, blue_search, red_search) {
 
 
 
-// TODO: Transform to Mock Search class and rename this function to 
+// TODO: Transform to Mock Search class and rename this function  
 function format_search_results_using_XML_tags(articles:Article[]): string {
     /**
      * Take in a list of articles and format it into a LLM ready text
@@ -130,11 +124,11 @@ function format_search_results_using_XML_tags(articles:Article[]): string {
     for (const article of articles) {
         output += tab_spaces + "<article>\n"
 
-        tab_spaces += "  " // increase indentation
+        tab_spaces += "  " 
         output += tab_spaces + "<title> " + article.title + "</title> \n"
         output += tab_spaces + "<political_affiliation> " + article.political_affiliation+ "</political_affiliation> \n"
         output += tab_spaces + "<body> " + article.body + " </body>\n"
-        tab_spaces = tab_spaces.slice(0, -2) // decrease indentation
+        tab_spaces = tab_spaces.slice(0, -2) 
 
         output += tab_spaces + "</article> \n\n"
     }
@@ -145,9 +139,7 @@ function format_search_results_using_XML_tags(articles:Article[]): string {
 
 
 /**
- * Generates a response using OpenAI's GPT-4 model based on the provided search results and RAG prompts.
- * 
- * This function takes the search results and RAG prompts, formats them, and generates a response using OpenAI's GPT-4 model.
+ * Computes an LLM response based on the provided search results and RAG prompts.
  * 
  * @param {string} search_results - The search results to be included in the prompt.
  * @param {Array<Record<string, any>>} rag_prompts - An array of RAG prompts to guide the response generation.

@@ -12,6 +12,7 @@ export default function Home() {
     const [query, setQuery] = useState("");
     const [completion, setCompletion] = useState("")
     const [results, setResults] = useState("");
+    const [view, setView] = useState("search")
 
     const handleSearch = async (query: string) => {
         console.log(`Query ${query}`)
@@ -21,17 +22,26 @@ export default function Home() {
 
         const message = await RAGResponse(query, blue_search, red_search);
         message ? setCompletion(message) : console.log("We got an empty response from RAG")
+        setView("results")
+    }
+
+    const handleBack = () => {
+        setView("search")
     }
 
     return (
         <div className={styles.container}>
-            <SearchBar
-                handleSearch={handleSearch} />
-            {completion && <LLMResponse response={completion}/>}
-            <div>
-                <p> -------------</p>
-            </div>
-            {results && <SearchResults results={results}/>}
+            {view == "search"?<SearchBar
+                handleSearch={handleSearch} />:
+                <>
+                    {completion && <LLMResponse response={completion}/>}
+                    <div>
+                        <p> -------------</p>
+                    </div>
+                    {results && <SearchResults results={results}/>}
+                    <button onClick={handleBack}>Make another search</button>
+                </>
+            }    
         </div>
     );
 }

@@ -14,11 +14,11 @@ export default function LLMResponse({ response }: LLMResponseProps) {
     return (
         <div className={styles.completionContainer}>
             <Typography variant="h5" component="div">
-                RAG Answer:
+                Shortened Bias Evaluation
             </Typography>
-            <Card>
+            <Card className={styles.LLMResponse}>
                 <CardContent>
-                    <ReactMarkdown>{response}</ReactMarkdown>
+                    <ReactMarkdown>{response.slice(0, 800)}</ReactMarkdown>
                 </CardContent>
             </Card>
         </div>
