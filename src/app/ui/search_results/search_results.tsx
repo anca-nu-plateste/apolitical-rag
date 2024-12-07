@@ -19,6 +19,7 @@ export default function SearchResults({ results }) {
                 <button  className={styles.arrow} onClick={handleNext}>&gt;</button>
             </div>
             <div className={styles.result} key={results[currentIndex].url}>
+                <h3>{results[currentIndex].title}</h3>
                 <p>{results[currentIndex].text}</p>
             </div>
         </div>
