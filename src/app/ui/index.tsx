@@ -2,8 +2,8 @@
 
 // import { useState } from "react";
 // import { searchResults, RAGResponse } from '@/utils'
-import styles from '@/app/ui/index.module.css'
-import SearchBar from "./search_bar/search_bar";
+// import styles from '@/app/ui/index.module.css'
+// import SearchBar from "./search_bar/search_bar";
 // import LLMResponse from "./llm_response/llm_response";
 // import SearchResults from "./search_results/search_results";
 // import {SearchResult, Search} from '@/app/types'
@@ -13,8 +13,8 @@ export default function Home() {
     // const [results, setResults] = useState<SearchResult[]>([]);
     // const [view, setView] = useState("search")
 
-    const handleSearch = async (query: string) => {
-        console.log(`Query ${query}`)
+    // const handleSearch = async (query: string) => {
+    //     console.log(`Query ${query}`)
         // const [blue_search, red_search] = await searchResults(query);
         // const formattedResults = formatSearches(blue_search, red_search)
         // console.log(formattedResults)
@@ -26,26 +26,29 @@ export default function Home() {
         //     console.log(completion)
         // }
         // setView("results")
-    }
+    // }
 
     // const handleBack = () => {
     //     setView("search")
     // }
-
     return (
-        <div className={styles.container}>
-            {/* {view == "search"? */}
-            <SearchBar handleSearch={handleSearch} />:
-                <>
-                    {/* {completion && <LLMResponse response={completion}/>} */}
-                    <div>
-                        <p> -------------</p>
-                    </div>
-                    {/* {results != null && <SearchResults results={results} handleSearch={handleBack} />} */}
-                </>
-            {/* }     */}
-        </div>
-    );
+        <p>Hello</p>
+    )
+
+//     return (
+//         <div className={styles.container}>
+//             {/* {view == "search"? */}
+//             <SearchBar handleSearch={handleSearch} />:
+//                 <>
+//                     {/* {completion && <LLMResponse response={completion}/>} */}
+//                     <div>
+//                         <p> -------------</p>
+//                     </div>
+//                     {/* {results != null && <SearchResults results={results} handleSearch={handleBack} />} */}
+//                 </>
+//             {/* }     */}
+//         </div>
+//     );
 }
 
 
