@@ -31,7 +31,6 @@ export default function Home() {
     // const handleBack = () => {
     //     setView("search")
     // } 
-    // throw new Error("Fail fail");
     return (
         <p>Hello</p>
     )
