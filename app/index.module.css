@@ -13,9 +13,24 @@
 }
 
 .results_container {
-    background-color: green;
+    /* background-color: rgb(213, 125, 125,0.3); */
     display: flex;
-    flex-direction: column-reverse; /* Items start from the bottom and go up */
+    flex-direction: column; /* Items start from the bottom and go up */
     justify-content: flex-end;      /* Ensure they sit at the bottom of the container */
     align-items: center;            /* Center items horizontally, adjust as needed */
+}
+
+.search_button {
+    margin-bottom: 5vh;
+    /* color: blanchedalmond; */
+    /* background-color: rgb(255, 217, 0,0.4); */
+    /* height: 50px;
+    width:100px;  */
+
+    /* background-color: rgb(230, 212, 15); */
+}
+
+.search_button_container {
+    display: flex;
+    align-items: center;
 }

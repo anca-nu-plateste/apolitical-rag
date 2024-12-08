@@ -10,9 +10,9 @@ export default function SearchBar({ handleSearch }: SearchBarProps) {
     
     return (
     <div className={styles.searchBox}>
-        <h3>Apolitical Rag</h3>
+        <h1>Apolitical Rag</h1>
         <br></br>
-        <h4>Ask a question about the election and we will generate a response that captures republican & democratic opinions</h4>
+        <h2>Ask me about a current event or choose a hand picked search</h2>
         <input
             type="text"
             value={query}
@@ -34,5 +34,6 @@ let title_to_query: Record<string, string>= {
         "China hacking calls of senior political figures within the US": 
             "US outlook on China hacking calls of senior political figures within the US",
             // romania election
+            "romanian presidential election": "Query news about the romanian presidential election in 2024"
             // some trump cabinet election
 };

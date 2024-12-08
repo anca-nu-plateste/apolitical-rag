@@ -19,7 +19,7 @@ export default function LLMResponse({ response }: LLMResponseProps) {
     }
     return (
         <div className={styles.completionContainer}>
-            {! showResponse && <Button variant="primary" onClick={handleLLM}>Evaluate Bias</Button>}
+            {! showResponse && <Button variant="warning" onClick={handleLLM}>Evaluate Bias</Button>}
             {showResponse && <div>
                 <Card className={styles.LLMResponse}>
                 <CardContent>

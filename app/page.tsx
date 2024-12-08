@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { searchResults, RAGResponse } from '../utils'
 import styles from './index.module.css'
 import SearchBar from "./search_bar/search_bar";
 import LLMResponse from "./llm_response/llm_response";
 import SearchResults from "./search_results/search_results";
 import {SearchResult, Search} from './types'
+import { Button } from "react-bootstrap";
 
 export default function Home() {
     const [completion, setCompletion] = useState("")
@@ -41,7 +43,9 @@ export default function Home() {
                     <div>
                         {results != null && <SearchResults results={results}/>}
                     </div>
-                    <button onClick={handleBack}>Make another search</button>
+                    <div className={styles.search_button_container}>
+                        <Button variant="light" className={styles.search_button} size='lg' onClick={handleBack}> Another search</Button>
+                    </div>
                 </div>
             </>
             } 
