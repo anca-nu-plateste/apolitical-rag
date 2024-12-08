@@ -1,12 +1,14 @@
 'use client';
 
 import { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
 import { searchResults, RAGResponse } from '../utils'
 import styles from './index.module.css'
 import SearchBar from "./search_bar/search_bar";
 import LLMResponse from "./llm_response/llm_response";
 import SearchResults from "./search_results/search_results";
 import {SearchResult, Search} from './types'
+import { Button } from "react-bootstrap";
 
 export default function Home() {
     const [completion, setCompletion] = useState("")
@@ -32,16 +34,21 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            {view == "search"?
+            {
+            view == "search"?
             <SearchBar handleSearch={handleSearch} />:
-                <>
+            <>
+                <div className={styles.results_container}>
                     {completion && <LLMResponse response={completion}/>}
                     <div>
-                        <p> -------------</p>
+                        {results != null && <SearchResults results={results}/>}
                     </div>
-                    {results != null && <SearchResults results={results} handleSearch={handleBack} />}
-                </>
-            }    
+                    <div className={styles.search_button_container}>
+                        <Button variant="light" className={styles.search_button} size='lg' onClick={handleBack}> Another search</Button>
+                    </div>
+                </div>
+            </>
+            } 
         </div>
     );
 }

@@ -1,15 +1,17 @@
 .completionContainer {
-    margin-top: 40px;
-    /* Add space between the search bar and the completion result */
-    max-width: 75vw;
-    max-height: 20vh;
-    margin: 50px;
+    margin-top: 5vh;
+    max-width: 80vw;
+    display: flex;
 }
 
-.LLMresponse {
-    max-height: 20vh;
-    overflow-y: 'auto';
-    overflow-x:'auto';
-    border-color : green;
-    border-width: 10px;
+.LLMResponse {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    background: #fff;
+    padding: 1rem;
+    max-height: 10vh;
+    overflow-y: auto;
 }
+
+
