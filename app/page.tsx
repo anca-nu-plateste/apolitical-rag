@@ -7,7 +7,6 @@ import SearchBar from "./search_bar/search_bar";
 import LLMResponse from "./llm_response/llm_response";
 import SearchResults from "./search_results/search_results";
 import {SearchResult, Search} from './types'
-import UncontrolledExample from "./carousel/carousel";
 
 export default function Home() {
     const [completion, setCompletion] = useState("")
