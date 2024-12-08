@@ -7,6 +7,7 @@ import SearchBar from "./search_bar/search_bar";
 import LLMResponse from "./llm_response/llm_response";
 import SearchResults from "./search_results/search_results";
 import {SearchResult, Search} from './types'
+import UncontrolledExample from "./carousel/carousel";
 
 export default function Home() {
     const [completion, setCompletion] = useState("")
@@ -32,16 +33,19 @@ export default function Home() {
 
     return (
         <div className={styles.container}>
-            {view == "search"?
+            {
+            view == "search"?
             <SearchBar handleSearch={handleSearch} />:
-                <>
+            <>
+                <div className={styles.results_container}>
                     {completion && <LLMResponse response={completion}/>}
                     <div>
-                        <p> -------------</p>
+                        {results != null && <SearchResults results={results}/>}
                     </div>
-                    {results != null && <SearchResults results={results} handleSearch={handleBack} />}
-                </>
-            }    
+                    <button onClick={handleBack}>Make another search</button>
+                </div>
+            </>
+            } 
         </div>
     );
 }

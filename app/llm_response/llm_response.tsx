@@ -1,26 +1,32 @@
-import { Card, CardContent, Typography } from '@mui/material';
+import React from 'react';
+import { useState } from "react";
+
+import styles from './llm_response.module.css';
 import ReactMarkdown from 'react-markdown';
-
-
-import styles from './llm_response.module.css'
-
+import Typography from '@mui/material/Typography';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { Button, CardHeader, CardTitle } from 'react-bootstrap';
 
 interface LLMResponseProps {
     response: string;
 }
 
-
 export default function LLMResponse({ response }: LLMResponseProps) {
+    const [showResponse,setShowResponse] = useState(false);
+    const handleLLM = () => {
+        setShowResponse(true)
+    }
     return (
         <div className={styles.completionContainer}>
-            <Typography variant="h5" component="div">
-                Shortened Bias Evaluation
-            </Typography>
-            <Card className={styles.LLMResponse}>
+            {! showResponse && <Button variant="primary" onClick={handleLLM}>Evaluate Bias</Button>}
+            {showResponse && <div>
+                <Card className={styles.LLMResponse}>
                 <CardContent>
-                    <ReactMarkdown>{response.slice(0, 800)}</ReactMarkdown>
+                    <ReactMarkdown >{response}</ReactMarkdown>
                 </CardContent>
             </Card>
+            </div>}
         </div>
     );
 }

@@ -29,3 +29,10 @@ export default function SearchBar({ handleSearch }: SearchBarProps) {
     </div>
     );
 }
+
+let title_to_query: Record<string, string>= {
+        "China hacking calls of senior political figures within the US": 
+            "US outlook on China hacking calls of senior political figures within the US",
+            // romania election
+            // some trump cabinet election
+};
