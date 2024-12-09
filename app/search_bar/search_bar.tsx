@@ -62,6 +62,9 @@ let title_to_query: Record<string, string> = {
     "China hacking calls of senior political figures within the US":
         "US outlook on China hacking calls of senior political figures within the US",
     // romania election
-    "romanian presidential election": "Query news about the romanian presidential election in 2024"
+    "trump's term": "Trump's business empire has expanded. Here's where he could profit in his second term.",
     // some trump cabinet election
+
+    "US military offsprey flights": "US military Osprey flights paused again amid safety questions",
+    "Biden pardons Hunter of crimes": "Biden’s pardon of his son makes presidential history"
 };

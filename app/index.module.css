@@ -21,17 +21,10 @@
     align-items: center;          /* Center items horizontally, adjust as needed */
 }
 
-.search_button {
-    margin-bottom: 5vh;
-    /* color: blanchedalmond; */
-    /* background-color: rgb(255, 217, 0,0.4); */
-    /* height: 50px;
-    width:100px;  */
-
-    /* background-color: rgb(230, 212, 15); */
-}
 
 .search_button_container {
     display: flex;
     align-items: center;
+    margin-top: 5vh;
+    margin-bottom: 0vh;
 }

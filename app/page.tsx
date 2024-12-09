@@ -40,12 +40,13 @@ export default function Home() {
             {
                 view == "search" ?
                     <SearchBar handleSearch={handleSearch} /> :
-                    <>
-                        {blueSearch && <ResultsDashboard query={query} blue_search_results={blueSearch} red_search_results={redSearch}></ResultsDashboard>};
+                    <div >
                         <div className={styles.search_button_container}>
-                            <Button variant="light" className={styles.search_button} size='lg' onClick={handleBack}> Another search</Button>
-                        </div>
-                    </>
+                            <Button variant="light" className={styles.search_button} size='sm' onClick={handleBack}> Another search</Button>
+                          </div>
+                        {blueSearch && <ResultsDashboard query={query} blue_search_results={blueSearch} red_search_results={redSearch}></ResultsDashboard>}
+                        
+                    </div>
                 // <>
                 //     <div className={styles.results_container}>
                 //         {completion && <LLMResponse response={completion}/>}

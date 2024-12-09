@@ -23,7 +23,7 @@ export default function ResultsDashboard({query, blue_search_results, red_search
     const [completion, setCompletion] = useState("");
     const [triggeredRag, setTriggeredRag] = useState(false);
 
-    const [showModal, setShowModal] = useState(true);
+    const [showModal, setShowModal] = useState(false);
     const handleClose = () => setShowModal(false);
 
 
@@ -39,7 +39,7 @@ export default function ResultsDashboard({query, blue_search_results, red_search
     return (
         <div className={styles.results_container}>
             <div    >
-              {completion && <LLMResponse
+              {<LLMResponse
                 showModal={showModal}
                 handleClose={handleClose}
                 response={completion}
@@ -52,6 +52,7 @@ export default function ResultsDashboard({query, blue_search_results, red_search
             <div>
                 {!triggeredRag && <Button variant="light" data-bs-toggle="popover" onClick={fetchData}>Analyze Bias </Button>}
                 {triggeredRag && !completion  && <h3> ⏳ Loading LLM response...</h3>}
+                {completion && <Button variant="light" onClick={() => setShowModal(true)}>Bias Evaluation</Button>}
             </div>
     </div>
 

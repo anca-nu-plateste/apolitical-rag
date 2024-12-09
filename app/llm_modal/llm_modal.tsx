@@ -12,7 +12,6 @@ export default function LLMResponse({ showModal, handleClose, response }: LLMRes
     return (
         <Modal show={showModal} onHide={handleClose} id="infoPopup">
             <Modal.Header closeButton>
-                <Modal.Title>LLM Response</Modal.Title>
             </Modal.Header>
 
             <Modal.Body>
