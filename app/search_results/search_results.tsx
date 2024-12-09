@@ -16,7 +16,9 @@ export default function SearchResults({ results }: { results: SearchResult[]}) {
 
     return (
         <>
-            <h1> Results</h1>
+            <div>
+                <h1> Results</h1>
+            </div>
             <div className={styles.results}>
                 <div key={results[currentIndex].url}>
                     <h3>{results[currentIndex].title}</h3>

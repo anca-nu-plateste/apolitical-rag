@@ -7,25 +7,28 @@ import styles from './index.module.css'
 import SearchBar from "./search_bar/search_bar";
 import LLMResponse from "./llm_response/llm_response";
 import SearchResults from "./search_results/search_results";
-import {SearchResult, Search} from './types'
+import { SearchResult, Search } from './types'
 import { Button } from "react-bootstrap";
+import ResultsDashboard from "./results_dashboard/results_dashboard";
 
 export default function Home() {
-    const [completion, setCompletion] = useState("")
     const [results, setResults] = useState<SearchResult[]>([]);
-    const [view, setView] = useState("search")
+    const [view, setView] = useState("search");
+    const [blueSearch, setBlueSearch] = useState({});
+    const [redSearch, setRedSearch] = useState({});
+    const [query, setQuery] = useState("")
 
     const handleSearch = async (query: string) => {
         console.log(`Query ${query}`)
+        setQuery(query)
         const [blue_search, red_search] = await searchResults(query);
+        setBlueSearch(blue_search)
+        setRedSearch(red_search)
         const formattedResults = formatSearches(blue_search, red_search)
+        console.log(`Got results: ${formattedResults}`)
         setResults(formattedResults)
-
-        const message = await RAGResponse(query, blue_search, red_search);
-        if (message) {
-            setCompletion(message)
-        }
         setView("results")
+
     }
 
     const handleBack = () => {
@@ -35,20 +38,26 @@ export default function Home() {
     return (
         <div className={styles.container}>
             {
-            view == "search"?
-            <SearchBar handleSearch={handleSearch} />:
-            <>
-                <div className={styles.results_container}>
-                    {completion && <LLMResponse response={completion}/>}
-                    <div>
-                        {results != null && <SearchResults results={results}/>}
+                view == "search" ?
+                    <SearchBar handleSearch={handleSearch} /> :
+                    <div >
+                        <div className={styles.search_button_container}>
+                            <Button variant="light" className={styles.search_button} size='sm' onClick={handleBack}> Another search</Button>
+                          </div>
+                        {blueSearch && <ResultsDashboard query={query} blue_search_results={blueSearch} red_search_results={redSearch}></ResultsDashboard>}
+                        
                     </div>
-                    <div className={styles.search_button_container}>
-                        <Button variant="light" className={styles.search_button} size='lg' onClick={handleBack}> Another search</Button>
-                    </div>
-                </div>
-            </>
-            } 
+                // <>
+                //     <div className={styles.results_container}>
+                //         {completion && <LLMResponse response={completion}/>}
+                //         <SearchResults results={results}/>
+
+                //         <div className={styles.search_button_container}>
+                //             <Button variant="light" className={styles.search_button} size='lg' onClick={handleBack}> Another search</Button>
+                //         </div>
+                //     </div>
+                // </>
+            }
         </div>
     );
 }
@@ -58,9 +67,9 @@ export default function Home() {
 function formatSearches(
     blue_search: Search,
     red_search: Search):
-     SearchResult[] {
+    SearchResult[] {
     const results: SearchResult[] = [];
-    
+
     // Handle single response objects
     if (blue_search.results) {
         for (const result of blue_search.results) {
@@ -72,7 +81,7 @@ function formatSearches(
             });
         }
     }
-    
+
     if (red_search.results) {
         for (const result of red_search.results) {
             results.push({
@@ -83,7 +92,7 @@ function formatSearches(
             });
         }
     }
-    
+
     return results;
 }
 

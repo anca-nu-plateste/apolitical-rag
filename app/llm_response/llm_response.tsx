@@ -1,5 +1,4 @@
 import React from 'react';
-import { useState } from "react";
 
 import styles from './llm_response.module.css';
 import ReactMarkdown from 'react-markdown';
@@ -13,20 +12,15 @@ interface LLMResponseProps {
 }
 
 export default function LLMResponse({ response }: LLMResponseProps) {
-    const [showResponse,setShowResponse] = useState(false);
-    const handleLLM = () => {
-        setShowResponse(true)
-    }
     return (
         <div className={styles.completionContainer}>
-            {! showResponse && <Button variant="warning" onClick={handleLLM}>Evaluate Bias</Button>}
-            {showResponse && <div>
+           <div>
                 <Card className={styles.LLMResponse}>
-                <CardContent>
-                    <ReactMarkdown >{response}</ReactMarkdown>
-                </CardContent>
-            </Card>
-            </div>}
+                    <CardContent>
+                        <ReactMarkdown >{response}</ReactMarkdown>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     );
 }
