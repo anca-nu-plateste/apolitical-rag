@@ -1,39 +1,67 @@
 "use client";
 import { useState } from "react";
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 import styles from './search_bar.module.css'
+import { Button, Dropdown } from "react-bootstrap";
 
 interface SearchBarProps {
     handleSearch: (query: string) => Promise<void>;
-  }
+}
 export default function SearchBar({ handleSearch }: SearchBarProps) {
     const [query, setQuery] = useState("");
-    
+
+    const updateSearch = (title: string) => {
+        setQuery(title_to_query[title])
+    }
     return (
-    <div className={styles.searchBox}>
-        <h1>Apolitical Rag</h1>
-        <br></br>
-        <h2>Ask me about a current event or choose a hand picked search</h2>
-        <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search..."
-            className={styles.input}
-        />
-        <button 
-            onClick={() => handleSearch(query)} 
-            className={styles.button}
-        >
-            Search
-        </button>
-    </div>
+        <div className={styles.searchBox}>
+            <h1>Apolitical Rag</h1>
+            <br></br>
+            <h2>Ask me about a current event or try a hand picked search</h2>
+            <div className={styles.searchContainer}>
+                <input
+                    type="text"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search..."
+                    className={styles.input}
+                />
+                <Dropdown drop="end">
+                    <Dropdown.Toggle className={styles.subtleButton} variant="underline-light" id="dropdown-button">
+                        🔎
+                    </Dropdown.Toggle>
+
+                    <Dropdown.Menu className={styles.subtleMenu}  variant="underline-light">
+                        {Object.entries(title_to_query).map(([title, queryValue]) => (
+                            <Dropdown.Item
+                                key={title}
+                                href="#"
+                                onClick={() => handleSearch(title_to_query[title])}
+                            >
+                                {title}
+                            </Dropdown.Item>
+                        ))}
+                    </Dropdown.Menu>
+                </Dropdown>
+            </div>
+
+
+            <Button
+                variant="light"
+                onClick={() => handleSearch(query)}
+                className={styles.button}
+            >
+                Search
+            </Button>
+        </div>
     );
 }
 
-let title_to_query: Record<string, string>= {
-        "China hacking calls of senior political figures within the US": 
-            "US outlook on China hacking calls of senior political figures within the US",
-            // romania election
-            "romanian presidential election": "Query news about the romanian presidential election in 2024"
-            // some trump cabinet election
+let title_to_query: Record<string, string> = {
+    "China hacking calls of senior political figures within the US":
+        "US outlook on China hacking calls of senior political figures within the US",
+    // romania election
+    "romanian presidential election": "Query news about the romanian presidential election in 2024"
+    // some trump cabinet election
 };

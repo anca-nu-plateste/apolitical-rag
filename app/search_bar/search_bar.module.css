@@ -10,6 +10,8 @@
     font-size: 18px;
     padding: 10px;
     margin-bottom: 20px;
+    border-radius: 20px;
+    background-color: rgb(213, 125, 125,0.3);
 }
 
 .button {
@@ -17,4 +19,27 @@
     height: 40px;
     font-size: 18px;
     cursor: pointer;
+}
+
+.searchContainer {
+    display: flex;
+    margin: 10px;
+    margin-bottom: 5px;
+}
+
+.subtleButton {
+    /* border-color: black; */
+    border-radius:20%;
+    margin-left: 2px;
+}
+
+.subtleButton:hover {
+    /* border-color: black; */
+    background-color: white;
+}
+
+.subtleMenu {
+    border-color: black;
+    background-color: rgb(213, 125, 125,0.0);
+    
 }

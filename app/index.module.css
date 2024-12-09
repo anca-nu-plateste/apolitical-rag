@@ -14,10 +14,11 @@
 
 .results_container {
     /* background-color: rgb(213, 125, 125,0.3); */
+    margin-top: auto;
     display: flex;
     flex-direction: column; /* Items start from the bottom and go up */
-    justify-content: flex-end;      /* Ensure they sit at the bottom of the container */
-    align-items: center;            /* Center items horizontally, adjust as needed */
+    justify-content: flex-start;      /* Ensure they sit at the bottom of the container */
+    align-items: center;          /* Center items horizontally, adjust as needed */
 }
 
 .search_button {
